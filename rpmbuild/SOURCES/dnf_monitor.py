@@ -137,30 +137,32 @@ def send_email_alert(server_name, packages, ips, email_config, is_critical):
     </html>
     """
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = assunto
-    
-    # Formata o cabeçalho "Nome <email@dominio.com>" de forma segura contra anti-spoofing
-    msg["From"] = formataddr((email_config["sender_name"], email_config["sender_email"]))
-    msg["To"] = ", ".join(email_config["recipients"])
-    
-    msg.attach(MIMEText(html_content, "html"))
-
     try:
+        # Abre a ligação SMTP apenas uma vez
         if email_config["port"] == 465:
-            with smtplib.SMTP_SSL(email_config["server"], email_config["port"]) as server:
-                server.login(email_config["user"], email_config["pass"])
-                # Usa o endereço bruto para envio SMTP
-                server.sendmail(email_config["sender_email"], email_config["recipients"], msg.as_string())
+            server = smtplib.SMTP_SSL(email_config["server"], email_config["port"])
         else:
-            with smtplib.SMTP(email_config["server"], email_config["port"]) as server:
-                server.starttls()
-                server.login(email_config["user"], email_config["pass"])
-                # Usa o endereço bruto para envio SMTP
-                server.sendmail(email_config["sender_email"], email_config["recipients"], msg.as_string())
-        logging.info("E-mail enviado com sucesso.")
+            server = smtplib.SMTP(email_config["server"], email_config["port"])
+            server.starttls()
+            
+        with server:
+            server.login(email_config["user"], email_config["pass"])
+            
+            # Itera sobre a lista de e-mails para enviar cópias individuais
+            for recipient in email_config["recipients"]:
+                msg = MIMEMultipart("alternative")
+                msg["Subject"] = assunto
+                msg["From"] = formataddr((email_config["sender_name"], email_config["sender_email"]))
+                # O destinatário no cabeçalho é apenas a pessoa atual do loop
+                msg["To"] = recipient
+                msg.attach(MIMEText(html_content, "html"))
+                
+                # Envia o e-mail
+                server.sendmail(email_config["sender_email"], [recipient], msg.as_string())
+                logging.info(f"E-mail enviado com sucesso individualmente para: {recipient}")
+                
     except Exception as e:
-        logging.error(f"Falha ao enviar E-mail: {e}")
+        logging.error(f"Falha ao enviar E-mail via {email_config['server']}:{email_config['port']} - {e}")
 
 def main():
     bot_token, chat_ids, horas_rotacao, email_config = load_config()
