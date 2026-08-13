@@ -75,7 +75,16 @@ def get_upgradable_packages():
         base.read_all_repos()
         base.fill_sack()
         upgrades = base.sack.query().upgrades()
-        return [pkg.name for pkg in upgrades]
+        
+        # Opção 2: Utilizando um conjunto (set) para garantir que não haja duplicatas
+        # logo no momento em que iteramos sobre o resultado da query.
+        pacotes_pendentes = set()
+        for pkg in upgrades:
+            if pkg.name:
+                pacotes_pendentes.add(pkg.name)
+                
+        # Retornamos o set convertido para uma lista e ordenado alfabeticamente
+        return sorted(list(pacotes_pendentes))
     except Exception as e:
         logging.error(f"Erro ao consultar o DNF: {e}")
         return []
@@ -138,7 +147,6 @@ def send_email_alert(server_name, packages, ips, email_config, is_critical):
     """
 
     try:
-        # Abre a ligação SMTP apenas uma vez
         if email_config["port"] == 465:
             server = smtplib.SMTP_SSL(email_config["server"], email_config["port"])
         else:
@@ -148,16 +156,13 @@ def send_email_alert(server_name, packages, ips, email_config, is_critical):
         with server:
             server.login(email_config["user"], email_config["pass"])
             
-            # Itera sobre a lista de e-mails para enviar cópias individuais
             for recipient in email_config["recipients"]:
                 msg = MIMEMultipart("alternative")
                 msg["Subject"] = assunto
                 msg["From"] = formataddr((email_config["sender_name"], email_config["sender_email"]))
-                # O destinatário no cabeçalho é apenas a pessoa atual do loop
                 msg["To"] = recipient
                 msg.attach(MIMEText(html_content, "html"))
                 
-                # Envia o e-mail
                 server.sendmail(email_config["sender_email"], [recipient], msg.as_string())
                 logging.info(f"E-mail enviado com sucesso individualmente para: {recipient}")
                 

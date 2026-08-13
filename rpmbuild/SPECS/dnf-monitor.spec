@@ -89,3 +89,7 @@ fi
 /etc/systemd/system/dnf-monitor.service
 /etc/logrotate.d/dnf-monitor
 %config(noreplace) /etc/dnf-monitor/dnf-monitor.conf
+
+%changelog
+* Thu Aug 13 2026 Luiz Henrique Marques Fagundes <henrique@henrique.tec.br> - 1.0-5
+- Correcao de pacotes duplicados nas notificacoes (Telegram e E-mail) utilizando set().
