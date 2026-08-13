@@ -1,6 +1,6 @@
 Name:           dnf-monitor
 Version:        1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Daemon para monitoramento de atualizações DNF com alertas.
 BuildArch:      noarch
 License:        GPL
