@@ -1,6 +1,6 @@
 Name:           dnf-monitor
 Version:        1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Daemon para monitoramento de atualizações DNF com alertas.
 BuildArch:      noarch
 License:        GPL
@@ -93,3 +93,6 @@ fi
 %changelog
 * Thu Aug 13 2026 Luiz Henrique Marques Fagundes <henrique@henrique.tec.br> - 1.0-5
 - Correcao de pacotes duplicados nas notificacoes (Telegram e E-mail) utilizando set().
+
+* Sun Aug 30 2026 Luiz Henrique Marques Fagundes <henrique@henrique.tec.br> - 1.0-6
+- Fix: Implementado o solver nativo do DNF (base.upgrade_all() e base.resolve()) para ignorar corretamente pacotes retidos por quebra de dependências.

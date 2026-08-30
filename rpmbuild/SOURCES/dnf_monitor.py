@@ -72,18 +72,24 @@ def get_machine_ips():
 def get_upgradable_packages():
     try:
         base = dnf.Base()
+        base.conf.read()
         base.read_all_repos()
         base.fill_sack()
-        upgrades = base.sack.query().upgrades()
-        
-        # Opção 2: Utilizando um conjunto (set) para garantir que não haja duplicatas
-        # logo no momento em que iteramos sobre o resultado da query.
+
+        # Cria a transação e executa o solver de dependências (igual ao terminal)
+        base.upgrade_all()
+        base.resolve()
+
         pacotes_pendentes = set()
-        for pkg in upgrades:
-            if pkg.name:
+        
+        # Extrai apenas os pacotes que realmente passaram no teste de dependência
+        if base.transaction:
+            for pkg in base.transaction.upgrade_set:
+                pacotes_pendentes.add(pkg.name)
+            # Opcional: inclui pacotes novos que entram estritamente como dependência
+            for pkg in base.transaction.install_set:
                 pacotes_pendentes.add(pkg.name)
                 
-        # Retornamos o set convertido para uma lista e ordenado alfabeticamente
         return sorted(list(pacotes_pendentes))
     except Exception as e:
         logging.error(f"Erro ao consultar o DNF: {e}")
