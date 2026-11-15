@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  rpm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Testes unitários
+        run: python3 -m unittest discover -s tests
+      - name: Confere que a tag bate com a versão do código
+        run: |
+          code=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/dnf_monitor.py)
+          [ "v$code" = "$GITHUB_REF_NAME" ] || { echo "tag $GITHUB_REF_NAME != versão $code"; exit 1; }
+      - name: Gera o .rpm
+        run: |
+          ./build.sh
+          (cd dist && sha256sum ./*.rpm > SHA256SUMS)
+      - name: Notas da versão
+        run: |
+          awk -v v="${GITHUB_REF_NAME#v}" '/^## /{p=($2==v)} p' CHANGELOG.md > notes.md
+          {
+            echo
+            echo "### Instalação (RHEL, Rocky, AlmaLinux, Oracle Linux, CentOS Stream 8+)"
+            echo '```bash'
+            echo 'sha256sum -c SHA256SUMS --ignore-missing'
+            echo "sudo dnf install ./$(basename dist/*.rpm)"
+            echo '```'
+          } >> notes.md
+      - name: Publica (cria ou atualiza a release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/*.rpm dist/SHA256SUMS --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/*.rpm dist/SHA256SUMS --title "DNF Monitor $GITHUB_REF_NAME" --notes-file notes.md
+          fi
