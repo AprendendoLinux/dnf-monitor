@@ -8,6 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/AprendendoLinux/dnf-monitor?label=vers%C3%A3o)](https://github.com/AprendendoLinux/dnf-monitor/releases/latest)
 ![EL](https://img.shields.io/badge/RHEL%20%2F%20Rocky%20%2F%20Alma%20%2F%20Oracle-8%20%7C%209%20%7C%2010-EE0000?logo=redhat&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-%E2%89%A5%203.6-3776AB?logo=python&logoColor=white)
+[![Licença](https://img.shields.io/github/license/AprendendoLinux/dnf-monitor?label=licen%C3%A7a)](LICENSE)
 
 </div>
 
@@ -32,6 +33,7 @@ checagem.
 - [Perguntas frequentes](#-perguntas-frequentes)
 - [Documentação](#-documentação)
 - [Desenvolvimento e contribuição](#-desenvolvimento-e-contribuição)
+- [Licença](#-licença)
 
 ## 🌟 Por que usar
 
@@ -51,7 +53,7 @@ checagem.
 
 ```bash
 # 1. instalar (baixe o .rpm em Releases)
-sudo dnf install ./dnf-monitor-1.1.0-1.noarch.rpm
+sudo dnf install ./dnf-monitor-1.1.1-1.noarch.rpm
 
 # 2. configurar Telegram e/ou e-mail
 sudo vi /etc/dnf-monitor/dnf-monitor.conf
@@ -99,7 +101,7 @@ Baixe o arquivo mais recente em **[Releases](https://github.com/AprendendoLinux/
 
 ```bash
 sha256sum -c SHA256SUMS --ignore-missing
-sudo dnf install ./dnf-monitor-1.1.0-1.noarch.rpm
+sudo dnf install ./dnf-monitor-1.1.1-1.noarch.rpm
 ```
 
 O pacote copia os arquivos, cria `/var/lib/dnf-monitor`, protege o `.conf` (`0600`), configura o `logrotate` e
@@ -265,6 +267,10 @@ tests/docker/systemd-test.sh                # idem, com systemd real
 ```
 
 Veja [CONTRIBUTING.md](CONTRIBUTING.md). Releases são geradas automaticamente ao criar uma tag `vX.Y.Z`.
+
+## 📄 Licença
+
+[GPL-3.0-or-later](LICENSE) © Luiz Henrique Marques Fagundes e colaboradores.
 
 ---
 

@@ -6,8 +6,7 @@ Version:        @VERSION@
 Release:        1
 Summary:        Daemon de monitoramento de atualizações DNF com alertas
 BuildArch:      noarch
-# Licença herdada do spec anterior (ainda sem arquivo LICENSE no repositório).
-License:        GPL
+License:        GPL-3.0-or-later
 URL:            https://github.com/AprendendoLinux/dnf-monitor
 Source0:        dnf_monitor.py
 Source1:        dnf-monitor.conf
@@ -16,6 +15,7 @@ Source3:        dnf-monitor.logrotate
 Source4:        dnf-monitor.8
 Source5:        README.md
 Source6:        CHANGELOG.md
+Source7:        LICENSE
 
 Requires:       python3 >= 3.6
 Requires:       python3-dnf
@@ -30,7 +30,7 @@ atualizações de kernel e de segurança, avisa quando é preciso reiniciar e n�
 repete alertas já enviados.
 
 %prep
-cp -p %{SOURCE5} %{SOURCE6} .
+cp -p %{SOURCE5} %{SOURCE6} %{SOURCE7} .
 
 %build
 
@@ -97,10 +97,14 @@ rmdir /opt/dnf-monitor 2>/dev/null || :
 %config(noreplace) %{_sysconfdir}/logrotate.d/dnf-monitor
 %dir %attr(0750,root,root) %{_localstatedir}/lib/dnf-monitor
 %{_mandir}/man8/dnf-monitor.8*
+%license LICENSE
 %doc README.md CHANGELOG.md
 
 %changelog
 * Sat Nov 14 2026 Luiz Henrique Marques Fagundes <henrique@henrique.tec.br> - @VERSION@-1
+- Adiciona a licença GPL-3.0-or-later (LICENSE) ao repositório e ao pacote.
+
+* Sat Nov 14 2026 Luiz Henrique Marques Fagundes <henrique@henrique.tec.br> - 1.1.0-1
 - Reescrita: estado persistente, segurança, kernel/segurança/reboot, testes e documentação (veja CHANGELOG.md).
 
 * Sun Aug 30 2026 Luiz Henrique Marques Fagundes <henrique@henrique.tec.br> - 1.0-6

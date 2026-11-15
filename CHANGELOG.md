@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.1
+- Adiciona a licença **GPL-3.0-or-later** (`LICENSE`), o identificador SPDX no código e o `%license` no pacote RPM.
+
 ## 1.1.0
 
 ### Correções

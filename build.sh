@@ -9,9 +9,9 @@ VERSION=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/dnf_monitor.py)
 [ -n "$VERSION" ] || { echo "não achei __version__" >&2; exit 1; }
 
 TOP="$PWD/build/rpmbuild"
-rm -rf build "dist/dnf-monitor-$VERSION-1.noarch.rpm"
+rm -rf build; rm -f dist/dnf-monitor-*.rpm
 mkdir -p "$TOP"/{SOURCES,SPECS,BUILD,RPMS,SRPMS} dist
-cp src/dnf_monitor.py packaging/dnf-monitor.{conf,service,logrotate,8} README.md CHANGELOG.md "$TOP/SOURCES/"
+cp src/dnf_monitor.py packaging/dnf-monitor.{conf,service,logrotate,8} README.md CHANGELOG.md LICENSE "$TOP/SOURCES/"
 sed "s/@VERSION@/$VERSION/g" packaging/dnf-monitor.spec > "$TOP/SPECS/dnf-monitor.spec"
 
 if command -v rpmbuild >/dev/null 2>&1; then

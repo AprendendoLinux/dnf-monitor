@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: GPL-3.0-or-later
 """DNF Monitor Daemon.
 
 Monitora atualizações de pacotes DNF em servidores RHEL e derivados (Rocky,
@@ -35,7 +36,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr, formatdate, make_msgid
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 DEFAULT_CONFIG = "/etc/dnf-monitor/dnf-monitor.conf"
 DEFAULT_STATE = "/var/lib/dnf-monitor/state.json"
