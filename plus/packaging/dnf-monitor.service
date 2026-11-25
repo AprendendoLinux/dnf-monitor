@@ -1,0 +1,37 @@
+[Unit]
+Description=DNF Monitor Plus: alertas de atualização e relatório diário ao cliente
+Documentation=https://github.com/AprendendoLinux/dnf-monitor/tree/main/plus
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /usr/libexec/dnf-monitor-plus/dnf_monitor.py
+ExecReload=/bin/systemctl kill --kill-whom=main --signal=HUP dnf-monitor-plus.service
+Restart=on-failure
+RestartSec=30
+# Configuração inválida (EX_CONFIG): não adianta reiniciar em loop.
+RestartPreventExitStatus=78
+
+# Hardening (o dnf precisa de root para atualizar os metadados)
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict
+ReadWritePaths=/var/lib/dnf /var/cache/dnf /var/lib/rpm /var/log /var/lib/dnf-monitor-plus
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictRealtime=yes
+LockPersonality=yes
+PrivateDevices=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictNamespaces=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
