@@ -1,0 +1,81 @@
+.TH DNF-MONITOR-PLUS 8 "2026" "dnf-monitor-plus" "Administração do sistema"
+.SH NOME
+dnf-monitor-plus \- monitora atualizações DNF, avisa os administradores e envia relatório diário ao cliente
+.SH SINOPSE
+.B dnf-monitor-plus
+[\fB\-c\fR \fIARQUIVO\fR] [\fB\-\-once\fR] [\fB\-\-dry\-run\fR] [\fB\-\-test\-notify\fR] [\fB\-\-check\-config\fR] [\fB\-\-report\fR] [\fB\-v\fR]
+.SH DESCRIÇÃO
+Sem opções, roda como daemon (normalmente iniciado pelo systemd).
+.PP
+.B Administradores
+(seções [Telegram] e [Email]) recebem, na hora, o alerta de atualização disponível,
+destacando kernel e segurança, lembretes e avisos de reinicialização. A checagem acontece a cada
+\fICHECK_INTERVAL_HOURS\fR e também cerca de um minuto depois que o DNF baixa metadados novos ou o rpm instala pacotes.
+.PP
+.B Cliente
+(seções [ClientTelegram] e [ClientEmail]) recebe um único relatório por dia, no horário \fIREPORT_TIME\fR
+(fuso \fIREPORT_TIMEZONE\fR): quantas vezes o administrador atualizou o servidor e o total de pacotes
+atualizados, com sucesso e com falha. Se algum pacote espera instalação há mais de \fIPENDING_ALERT_DAYS\fR dias,
+o relatório lista todos os pendentes e sugere contato com o administrador. Atualizações do
+dnf\-automatic (e outras ferramentas que usam a API do DNF, sem linha de comando) não entram no relatório.
+.SH OPÇÕES
+.TP
+.BR \-c ", " \-\-config " " \fIARQUIVO\fR
+Arquivo de configuração (padrão: /etc/dnf\-monitor\-plus/dnf\-monitor.conf).
+.TP
+.B \-\-check\-config
+Valida a configuração, mostra os canais de administrador e de cliente e sai (código 78 se inválida).
+.TP
+.B \-\-test\-notify
+Envia uma mensagem de teste a cada canal: um alerta aos administradores e um relatório de exemplo ao cliente.
+.TP
+.B \-\-report
+Gera e envia agora o relatório diário ao cliente. O relatório programado do mesmo dia deixa de ser enviado.
+Com \fB\-\-dry\-run\fR, apenas mostra o relatório com o que já consta no histórico do apt.
+.TP
+.B \-\-once
+Faz uma única checagem de atualizações pendentes e sai.
+.TP
+.B \-\-dry\-run
+Mostra as mensagens que seriam enviadas, sem enviar nem gravar estado.
+.TP
+.BR \-v ", " \-\-verbose
+Log detalhado.
+.TP
+.B \-\-version
+Mostra a versão.
+.SH SINAIS
+.TP
+.B SIGHUP
+Recarrega a configuração e executa uma nova checagem (\fBsystemctl reload dnf\-monitor\-plus\fR).
+.TP
+.B SIGTERM
+Encerra de forma limpa.
+.SH CÓDIGOS DE SAÍDA
+.TP
+.B 0
+Sucesso.
+.TP
+.B 1
+Nenhum canal conseguiu entregar (\-\-once, \-\-test\-notify, \-\-report).
+.TP
+.B 78
+Configuração inválida (o systemd não reinicia o serviço).
+.SH ARQUIVOS
+.TP
+.I /etc/dnf\-monitor\-plus/dnf\-monitor.conf
+Configuração (contém credenciais; modo 0600).
+.TP
+.I /var/lib/dnf\-monitor\-plus/state.json
+Estado: o que já foi notificado aos administradores.
+.TP
+.I /var/lib/dnf\-monitor\-plus/history.db
+Banco SQLite: atualizações feitas, resultado por pacote, pendências e relatórios enviados (modo 0600).
+.TP
+.I /var/log/dnf\-monitor\-plus.log
+Log (rotacionado semanalmente).
+.TP
+.I /var/lib/dnf/history.sqlite
+Banco de transações do DNF, lido (somente leitura) para saber o que foi atualizado e se cada pacote foi instalado.
+.SH VEJA TAMBÉM
+https://github.com/AprendendoLinux/dnf-monitor/tree/main/plus

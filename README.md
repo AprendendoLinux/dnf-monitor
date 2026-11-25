@@ -5,7 +5,8 @@
 **Saiba na hora quando seus servidores RHEL, Rocky, AlmaLinux e Oracle Linux têm atualizações pendentes — sem spam.**
 
 [![CI](https://github.com/AprendendoLinux/dnf-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/AprendendoLinux/dnf-monitor/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/AprendendoLinux/dnf-monitor?label=vers%C3%A3o)](https://github.com/AprendendoLinux/dnf-monitor/releases/latest)
+[![Release](https://img.shields.io/github/v/release/AprendendoLinux/dnf-monitor?filter=v*&label=cl%C3%A1ssico)](https://github.com/AprendendoLinux/dnf-monitor/releases?q=%22DNF+Monitor+v%22&expanded=true)
+[![Plus](https://img.shields.io/github/v/release/AprendendoLinux/dnf-monitor?filter=plus-v*&label=Plus&color=d97706)](plus/README.md)
 ![EL](https://img.shields.io/badge/RHEL%20%2F%20Rocky%20%2F%20Alma%20%2F%20Oracle-8%20%7C%209%20%7C%2010-EE0000?logo=redhat&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-%E2%89%A5%203.6-3776AB?logo=python&logoColor=white)
 [![Licença](https://img.shields.io/github/license/AprendendoLinux/dnf-monitor?label=licen%C3%A7a)](LICENSE)
@@ -18,6 +19,31 @@ preciso **reiniciar** e lembra o que já foi notificado — então você recebe 
 checagem.
 
 > Versão para Debian/Ubuntu: [apt-monitor-daemon](https://github.com/AprendendoLinux/apt-monitor-daemon).
+
+> ### ⭐ Conheça o **DNF Monitor Plus**
+>
+> Uma edição **completa** do mesmo software, no mesmo repositório: além dos alertas, ela avisa os administradores **na
+> hora** (≈ 1 minuto depois que o DNF detecta) e envia ao **cliente** um **relatório diário** do que o administrador
+> atualizou (pacotes com sucesso e com falha), avisando também de **pendências antigas**. Os e-mails são totalmente novos.
+>
+> | | **Clássico** (esta página) | **[Plus](plus/README.md)** |
+> |---|:---:|:---:|
+> | Alertas aos administradores (Telegram e e-mail), kernel, segurança, reinício | ✅ | ✅ |
+> | Alerta imediato quando o DNF muda (≈ 1 min) | — | ✅ |
+> | E-mails novos (por gravidade, cartões, celular) | — | ✅ |
+> | Relatório diário ao cliente (Telegram e/ou e-mail) | — | ✅ |
+> | Aviso de pendência antiga ao cliente | — | ✅ |
+> | Histórico do que foi atualizado (do próprio DNF + SQLite) | — | ✅ |
+> | Dependências | `python3-dnf` | `python3-dnf` + `tzdata` |
+>
+> **Escolha o Plus** se presta serviço a alguém e quer **mostrar o trabalho feito** automaticamente, ou quer alertas mais
+> rápidos. **Fique no clássico** se o alerta simples basta. O Plus **substitui** o clássico e **migra a sua configuração
+> sozinho**: **[leia o guia do Plus](plus/README.md)** · **[migração](plus/docs/migracao.md)**.
+>
+> | Edição | Pacote | Tags de release | Documentação |
+> |---|---|---|---|
+> | Clássico | `dnf-monitor` | `v1.x.y` | esta página e `docs/` |
+> | **Plus** | `dnf-monitor-plus` | `plus-v1.x.y` | [`plus/`](plus/README.md) |
 
 ## Índice
 
@@ -96,7 +122,7 @@ segurança* e alternativa em texto puro. Cada destinatário recebe a própria me
 
 ### Pelo `.rpm` (recomendado)
 
-Baixe o arquivo mais recente em **[Releases](https://github.com/AprendendoLinux/dnf-monitor/releases/latest)**
+Baixe o arquivo mais recente do DNF Monitor clássico em **[Releases](https://github.com/AprendendoLinux/dnf-monitor/releases?q=%22DNF+Monitor+v%22&expanded=true)** (versões `v…`)
 (há também o `SHA256SUMS`). O pacote é `noarch` e serve para **EL8, EL9 e EL10**:
 
 ```bash
